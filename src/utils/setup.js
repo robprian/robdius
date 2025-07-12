@@ -37,13 +37,13 @@ const createLogger = () => {
   
   const logFile = path.join(logPath, 'app.log');
   if (!fs.existsSync(logFile)) {
-    fs.writeFileSync(logFile, `PHPNuxBill-JS Application Log\nStarted: ${new Date().toISOString()}\n\n`);
+    fs.writeFileSync(logFile, `Robdius Application Log\nStarted: ${new Date().toISOString()}\n\n`);
   }
 };
 
 // Setup function
 const setup = () => {
-  console.log('🚀 Setting up PHPNuxBill-JS...');
+  console.log('🚀 Setting up Robdius...');
   
   createDirectories();
   createLogger();

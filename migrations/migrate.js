@@ -17,12 +17,12 @@ const migrate = async () => {
     // Create default admin user if not exists
     const adminExists = await User.findOne({ where: { username: 'admin' } });
     if (!adminExists) {
-      const hashedPassword = await bcrypt.hash('admin123', 10);
+      const hashedPassword = await bcrypt.hash('P4ks1m1n', 10);
       await User.create({
         username: 'admin',
         password: hashedPassword,
         fullname: 'Administrator',
-        email: 'admin@phpnuxbill.com',
+        email: 'robprian@gmail.com',
         user_type: 'SuperAdmin',
         status: 'Active'
       });
@@ -31,15 +31,17 @@ const migrate = async () => {
     
     // Create default app config if not exists
     const configs = [
-      { setting: 'CompanyName', value: 'PHPNuxBill-JS' },
-      { setting: 'address', value: 'Your Company Address' },
-      { setting: 'phone', value: '+1234567890' },
-      { setting: 'timezone', value: 'UTC' },
+      { setting: 'CompanyName', value: 'Robdius' },
+      { setting: 'address', value: 'Jl. Ganggeng Barat' },
+      { setting: 'phone', value: '+6285591995511' },
+      { setting: 'timezone', value: 'UTC+7' },
       { setting: 'maintenance_mode', value: 'false' },
       { setting: 'language', value: 'english' },
-      { setting: 'currency', value: 'USD' },
-      { setting: 'decimal_mark', value: '.' },
-      { setting: 'thousands_separator', value: ',' }
+      { setting: 'currency', value: 'IDR' },
+      { setting: 'decimal_mark', value: ',' },
+      { setting: 'thousands_separator', value: '.' },
+      { setting: 'enable_whatsapp', value: 'yes' },
+      { setting: 'whatsapp_notifications', value: 'yes' }
     ];
     
     for (const config of configs) {
@@ -70,12 +72,12 @@ const migrate = async () => {
         },
         {
           username: 'customer2',
-          password: await bcrypt.hash('password123', 10),
-          fullname: 'Jane Smith',
-          email: 'jane@example.com',
-          phone_number: '+1234567891',
-          address: '456 Oak Ave',
-          city: 'Los Angeles',
+          password: await bcrypt.hash('P4ks1m1n', 10),
+          fullname: 'Robby Aprianto',
+          email: 'rbbaprianto@gmail.com',
+          phone_number: '+6287738779828',
+          address: 'Mertasinga',
+          city: 'Cilacap',
           status: 'Active',
           balance: 25.00
         }

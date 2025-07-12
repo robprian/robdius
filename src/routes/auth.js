@@ -265,14 +265,14 @@ router.get('/me', async (req, res) => {
 // Login page
 router.get('/login', (req, res) => {
   res.render('auth/login', {
-    title: 'Login - PHPNuxBill'
+    title: 'Login - Robdius'
   });
 });
 
 // Admin login page
 router.get('/admin', (req, res) => {
   res.render('auth/admin-login', {
-    title: 'Admin Login - PHPNuxBill'
+    title: 'Admin Login - Robdius'
   });
 });
 

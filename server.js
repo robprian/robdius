@@ -180,7 +180,7 @@ async function startServer() {
     await connectDB();
     
     app.listen(PORT, () => {
-      console.log(`\n🚀 PHPNuxBill-JS Server running on port ${PORT}`);
+      console.log(`\n🚀 Robdius Server running on port ${PORT}`);
       console.log(`📊 Dashboard: http://localhost:${PORT}/dashboard`);
       console.log(`🔐 Admin: http://localhost:${PORT}/admin`);
       console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
