@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "name": "robdius",
   "builds": [
     {
       "src": "server.js",
@@ -8,17 +7,9 @@
       "config": {
         "includeFiles": ["src/**", "public/**", "migrations/**", "*.js", "*.json"]
       }
-    },
-    {
-      "src": "api/**/*.js",
-      "use": "@vercel/node"
     }
   ],
   "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
-    },
     {
       "src": "/public/(.*)",
       "dest": "/public/$1"
@@ -34,14 +25,6 @@
   ],
   "env": {
     "NODE_ENV": "production"
-  },
-  "functions": {
-    "server.js": {
-      "maxDuration": 30
-    },
-    "api/migrate.js": {
-      "maxDuration": 60
-    }
   },
   "regions": ["sin1"]
 }

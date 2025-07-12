@@ -3,33 +3,53 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Upstash Redis Configuration
-const redisClient = createClient({
-  url: process.env.UPSTASH_REDIS_REST_URL || process.env.REDIS_URL,
-  password: process.env.UPSTASH_REDIS_REST_TOKEN || process.env.REDIS_PASSWORD,
-  socket: {
-    tls: true,
-    rejectUnauthorized: false
+// Check if Redis is enabled
+const isRedisEnabled = process.env.REDIS_URL && process.env.REDIS_URL !== '';
+
+let redisClient = null;
+
+if (isRedisEnabled) {
+  // Redis Configuration for production
+  const redisConfig = {
+    url: process.env.REDIS_URL,
+    password: process.env.REDIS_PASSWORD || undefined
+  };
+
+  // Add TLS config for production Redis
+  if (process.env.NODE_ENV === 'production' && process.env.REDIS_URL.includes('redis-cloud.com')) {
+    redisConfig.socket = {
+      tls: false, // Redis Cloud uses regular connection
+      rejectUnauthorized: false
+    };
   }
-});
 
-redisClient.on('error', (err) => {
-  console.error('Redis Client Error:', err);
-});
+  redisClient = createClient(redisConfig);
 
-redisClient.on('connect', () => {
-  console.log('✅ Upstash Redis connected successfully');
-});
+  redisClient.on('error', (err) => {
+    console.error('Redis Client Error:', err);
+  });
 
-redisClient.on('ready', () => {
-  console.log('🔄 Upstash Redis ready for use');
-});
+  redisClient.on('connect', () => {
+    console.log('✅ Redis connected successfully');
+  });
 
-redisClient.on('end', () => {
-  console.log('❌ Redis connection ended');
-});
+  redisClient.on('ready', () => {
+    console.log('🔄 Redis ready for use');
+  });
+
+  redisClient.on('end', () => {
+    console.log('❌ Redis connection ended');
+  });
+} else {
+  console.log('⚠️  Redis is disabled for local development');
+}
 
 export const connectRedis = async () => {
+  if (!isRedisEnabled) {
+    console.log('⚠️  Redis connection skipped (disabled)');
+    return null;
+  }
+
   try {
     await redisClient.connect();
     return redisClient;

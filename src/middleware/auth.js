@@ -22,10 +22,15 @@ export const authMiddleware = async (req, res, next) => {
       return res.status(401).json({ message: 'Invalid token.' });
     }
 
-    req.user = user;
+    // Add userType to user object for templates
+    req.user = {
+      ...user.dataValues,
+      userType: decoded.userType
+    };
     req.userType = decoded.userType;
     next();
   } catch (error) {
+    console.error('Auth middleware error:', error);
     res.status(401).json({ message: 'Invalid token.' });
   }
 };
@@ -56,4 +61,18 @@ export const checkPermission = (allowedTypes) => {
     
     return res.status(403).json({ message: 'Access denied. Insufficient permissions.' });
   };
+};
+
+// Alias for authenticateToken
+export const authenticateToken = authMiddleware;
+
+// API Key authentication
+export const apiKeyAuth = (req, res, next) => {
+  const apiKey = req.header('X-API-Key');
+  
+  if (!apiKey || apiKey !== process.env.API_KEY) {
+    return res.status(401).json({ message: 'Invalid API key' });
+  }
+  
+  next();
 };

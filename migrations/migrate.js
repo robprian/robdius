@@ -102,6 +102,7 @@ const migrate = async () => {
           data_unit: 'MB',
           time_limit: 0,
           time_unit: 'Hrs',
+          routers: 'Main Router',
           enabled: true,
           description: 'Basic internet plan with 1GB data'
         },
@@ -118,6 +119,7 @@ const migrate = async () => {
           data_unit: 'MB',
           time_limit: 0,
           time_unit: 'Hrs',
+          routers: 'Main Router',
           enabled: true,
           description: 'Premium unlimited internet plan'
         }

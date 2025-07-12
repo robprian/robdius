@@ -59,3 +59,17 @@ docs/**
 !system/uploads/paid.png
 system/uploads/invoices/**
 node_modules
+.vercel
+.env*
+.env.local
+.env.example
+.env.development.local
+.env.test.local
+.env.production.local
+.env.development
+.env.test
+.env.production
+.env.local.json
+.env.development.json
+.env.test.json
+.env.production.json

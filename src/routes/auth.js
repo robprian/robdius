@@ -269,6 +269,100 @@ router.get('/login', (req, res) => {
   });
 });
 
+// Login POST route
+router.post('/login', [
+  body('username').notEmpty().trim().escape(),
+  body('password').notEmpty()
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Invalid input data',
+        errors: errors.array()
+      });
+    }
+
+    const { username, password } = req.body;
+
+    // Try to find admin user first
+    let user = await User.findOne({ where: { username } });
+    let userType = 'admin';
+    
+    // If not found in admin, try customer
+    if (!user) {
+      user = await Customer.findOne({ where: { username } });
+      userType = 'customer';
+    }
+
+    if (!user) {
+      await Log.create({
+        type: 'login',
+        description: `Failed login attempt - username: ${username}`,
+        userid: 0,
+        ip: getClientIp(req)
+      });
+      return res.status(401).json({ 
+        success: false, 
+        message: 'Invalid username or password' 
+      });
+    }
+
+    // Check password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      await Log.create({
+        type: 'login',
+        description: `Failed login attempt - username: ${username} (wrong password)`,
+        userid: user.id,
+        ip: getClientIp(req)
+      });
+      return res.status(401).json({ 
+        success: false, 
+        message: 'Invalid username or password' 
+      });
+    }
+
+    // Generate token
+    const token = generateToken(user.id, userType);
+
+    // Log successful login
+    await Log.create({
+      type: 'login',
+      description: `Successful login - ${userType}: ${username}`,
+      userid: user.id,
+      ip: getClientIp(req)
+    });
+
+    // Set session
+    req.session.user = {
+      id: user.id,
+      username: user.username,
+      type: userType
+    };
+
+    res.json({
+      success: true,
+      message: 'Login successful',
+      token,
+      user: {
+        id: user.id,
+        username: user.username,
+        type: userType
+      },
+      redirect: userType === 'admin' ? '/admin/dashboard' : '/customer/dashboard'
+    });
+
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Server error' 
+    });
+  }
+});
+
 // Admin login page
 router.get('/admin', (req, res) => {
   res.render('auth/admin-login', {
