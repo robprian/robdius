@@ -10,7 +10,10 @@
     "test": "jest",
     "build": "webpack --mode production",
     "migrate": "node migrations/migrate.js",
-    "vercel-build": "npm run build"
+    "vercel-build": "npm run build",
+    "deploy": "./scripts/deploy.sh",
+    "deploy:vercel": "vercel --prod",
+    "migrate:prod": "node -e \"import('./migrations/migrate.js').then(m => m.default())\""
   },
   "keywords": [
     "hotspot",

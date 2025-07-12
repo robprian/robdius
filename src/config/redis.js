@@ -3,10 +3,14 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+// Upstash Redis Configuration
 const redisClient = createClient({
-  url: process.env.REDIS_URL || 'redis://localhost:6379',
-  password: process.env.REDIS_PASSWORD || undefined,
-  database: process.env.REDIS_DB || 0
+  url: process.env.UPSTASH_REDIS_REST_URL || process.env.REDIS_URL,
+  password: process.env.UPSTASH_REDIS_REST_TOKEN || process.env.REDIS_PASSWORD,
+  socket: {
+    tls: true,
+    rejectUnauthorized: false
+  }
 });
 
 redisClient.on('error', (err) => {
@@ -14,11 +18,11 @@ redisClient.on('error', (err) => {
 });
 
 redisClient.on('connect', () => {
-  console.log('✅ Redis connected successfully');
+  console.log('✅ Upstash Redis connected successfully');
 });
 
 redisClient.on('ready', () => {
-  console.log('🔄 Redis ready for use');
+  console.log('🔄 Upstash Redis ready for use');
 });
 
 redisClient.on('end', () => {

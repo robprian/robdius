@@ -3,13 +3,9 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const sequelize = new Sequelize({
-  database: process.env.DB_NAME || 'robdius',
-  username: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || 'password',
-  host: process.env.DB_HOST || 'localhost',
-  port: process.env.DB_PORT || 5432,
-  dialect: process.env.DB_DIALECT || 'postgres',
+// Supabase Database Configuration
+const sequelize = new Sequelize(process.env.DATABASE_URL || process.env.SUPABASE_DB_URL, {
+  dialect: 'postgres',
   logging: process.env.NODE_ENV === 'development' ? console.log : false,
   define: {
     underscored: true,
@@ -18,16 +14,16 @@ const sequelize = new Sequelize({
     updatedAt: 'updated_at'
   },
   pool: {
-    max: 20,
+    max: 5,
     min: 0,
     acquire: 30000,
     idle: 10000
   },
   dialectOptions: {
-    ssl: process.env.NODE_ENV === 'production' ? {
+    ssl: {
       require: true,
       rejectUnauthorized: false
-    } : false
+    }
   }
 });
 
